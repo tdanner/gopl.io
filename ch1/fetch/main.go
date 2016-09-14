@@ -21,6 +21,7 @@ func main() {
 			url = "http://" + url
 		}
 		resp, err := http.Get(url)
+		fmt.Fprintf(os.Stderr, "fetch: HTTP status '%s' for %s\n", resp.Status, url)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
 			os.Exit(1)
