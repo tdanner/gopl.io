@@ -28,12 +28,7 @@ import (
 
 //!+main
 
-var palette = []color.Color{color.White, color.Black}
-
-const (
-	whiteIndex = 0 // first color in palette
-	blackIndex = 1 // next color in palette
-)
+var palette = []color.Color{color.Black}
 
 func main() {
 	//!-main
@@ -41,6 +36,14 @@ func main() {
 	// the pseudo-random number generator using the current time.
 	// Thanks to Randall McPherson for pointing out the omission.
 	rand.Seed(time.Now().UTC().UnixNano())
+
+	var i uint8
+	for ; i < 0xF; i++ {
+		palette = append(palette, color.RGBA{0, i*0x10, 0, 0xFF})
+	}
+	for ; i > 0; i-- {
+		palette = append(palette, color.RGBA{0, i*0x10, 0, 0xFF})
+	}
 
 	if len(os.Args) > 1 && os.Args[1] == "web" {
 		//!+http
@@ -74,7 +77,7 @@ func lissajous(out io.Writer) {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
 			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),
-				blackIndex)
+				uint8(1+(i%(len(palette)-1))))
 		}
 		phase += 0.1
 		anim.Delay = append(anim.Delay, delay)
